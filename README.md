@@ -2,6 +2,9 @@
 
 TrackLandscapeR builds publication-ready, multi-track density landscapes from genomic interval (BED-like) files. It bins intervals along a target chromosome, applies per-track proportional scaling, and renders aligned area plots with consistent x-axes and per-track y-limits.
 
+
+![图片说明](exemple_picture/Rplot.svg)
+
 ## Key features
 - Single entry point `plot_track_landscape()` to process multiple tracks and plot a faceted landscape.
 - Per-track proportional scaling and optional custom y-axis limits.

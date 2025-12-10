@@ -1,0 +1,25 @@
+Package: TrackLandscapeR
+Type: Package
+Title: Scaled Multi-Track Genomic Density Plots
+Version: 0.1.0
+Authors@R: c(
+    person("Liurxx", role = c("aut", "cre"))
+  )
+Description: Provides a publication-ready workflow to bin genomic interval
+    data, apply per-track proportional scaling, and render aligned area
+    plots for multiple tracks on the same chromosome. Includes helper
+    functions, sample data, and a vignette demonstrating typical usage.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+LazyData: true
+Imports:
+    ggplot2,
+    dplyr,
+    scales
+Depends: R (>= 4.1.0)
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+

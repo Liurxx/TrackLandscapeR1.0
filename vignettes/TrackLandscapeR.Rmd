@@ -1,0 +1,93 @@
+---
+title: "TrackLandscapeR: scaled multi-track density plots"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{TrackLandscapeR: scaled multi-track density plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 5
+)
+```
+
+## Overview
+
+TrackLandscapeR turns multiple genomic interval tracks into faceted, publication-ready landscapes. The core function `plot_track_landscape()` performs binning, per-track proportional scaling, optional y-limits, and plotting with minimal theming.
+
+## Data
+
+The package ships with `sample_tracks`, a lightweight list of three interval tables (Copia, TRASH, Gypsy) derived from the accompanying BED files.
+
+```{r}
+library(TrackLandscapeR)
+data("sample_tracks")
+str(sample_tracks, max.level = 1)
+```
+
+## Minimal example
+
+```{r}
+p <- plot_track_landscape(
+  bed_files = sample_tracks,
+  target_chr = "Chr1",
+  genome_size = 54e6,
+  bin_size = 1e5,
+  track_colors = c(Copia = "#0072B2", TRASH = "#D92121", Gypsy = "#CC79A7"),
+  track_scale_ratios = c(Copia = 2.5, TRASH = 0.03, Gypsy = 2.5),
+  custom_y_limits = c(Copia = 150, TRASH = 70, Gypsy = 150)
+)
+p
+```
+
+## Run with your full BED files
+
+```r
+# install from local source if needed
+install.packages("/media/liurxx/华为硬盘/30.igv/1.TRASH/all/TrackLandscapeR",
+                 repos = NULL, type = "source")
+
+library(TrackLandscapeR)
+
+bed_files <- c(
+  Copia = "Chr1.Copia.Glygla.bed",
+  TRASH = "Chr1_Glygla_TRASH_CEN60.bed",
+  Gypsy = "Chr1.Gypsy.Glygla.bed"
+)
+
+p <- plot_track_landscape(
+  bed_files = bed_files,
+  target_chr = "Chr1",
+  genome_size = 53933422,
+  bin_size = 100000,
+  track_colors = c(Copia="#0072B2", TRASH="#D92121", Gypsy="#CC79A7"),
+  track_scale_ratios = c(Copia=2.5, TRASH=0.03, Gypsy=2.5),
+  custom_y_limits = c(Copia=150, TRASH=70, Gypsy=150),
+  save_path = "/media/liurxx/华为硬盘/30.igv/1.TRASH/all/output_multitrack_scaled_actual.pdf",
+  width = 15, height = 6, dpi = 300
+)
+
+# optional dashed reference lines
+p <- p +
+  ggplot2::geom_vline(xintercept = c(10e6, 30e6), linetype = "dashed", color = "gray40", linewidth = 0.4) +
+  ggplot2::geom_hline(yintercept = 50, linetype = "dashed", color = "gray40", linewidth = 0.3)
+
+print(p)
+```
+
+## Guidance
+
+- Use named vectors for both `track_colors` and `track_scale_ratios` so the labels match the tracks you pass.
+- `custom_y_limits` should be in the same scale as the scaled frequencies (after multiplication).
+- Provide `save_path` to persist the figure via `ggsave`; `width`, `height`, and `dpi` are forwarded.
+- If your BED files include additional columns, only `chr`, `start`, and `end` are required for binning; other columns are ignored.
+
+## Reproducibility
+
+The vignette is built with base R plus `ggplot2`, `dplyr`, and `scales`, matching the package Imports. The sample data are small so rendering is fast and portable.
+
